@@ -46,10 +46,13 @@ namespace Wba.Oefening.RateAMovie.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
             AccountLoginViewModel accountLoginViewModel = new();
-            accountLoginViewModel.Username = HttpContext.Request.Cookies["username"];
+            var userName = await _movieContext
+                .Users.FirstOrDefaultAsync(u => u.UsernameHash
+                .Equals(HttpContext.Request.Cookies["username"] ?? ""));
+            accountLoginViewModel.Username = userName?.Username ?? "";
             return View(accountLoginViewModel);
         }
         [HttpPost]
@@ -67,7 +70,12 @@ namespace Wba.Oefening.RateAMovie.Web.Controllers
                 return View(accountLoginViewModel);
             }
             //set cookie for username
-            HttpContext.Response.Cookies.Append("Username", accountLoginViewModel.Username);
+            var hash = Argon2.Hash(accountLoginViewModel.Username);
+            HttpContext.Response.Cookies.Append("Username", hash );
+            //add hash to usertable
+            var user = await _movieContext.Users.FirstOrDefaultAsync(u => u.Username.Equals(accountLoginViewModel.Username));
+            user.UsernameHash = hash;
+            await _movieContext.SaveChangesAsync();
             return RedirectToAction("Index", "Movies");
         }
 
