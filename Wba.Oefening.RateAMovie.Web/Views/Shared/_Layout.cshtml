@@ -42,14 +42,12 @@
                 <li class="nav-item active">
                     <a asp-controller="Companies" asp-action="Index" class="nav-link">Our Companies</a>
                 </li>
-                <li class="nav-item">
-                    <div class="nav-link">
-                        Welkom @Context.Session.GetString("username")
-                    </div>
-                </li>
             </ul>
             @if (Context.Session.GetInt32("loggedIn") == 1)
             {
+                <div class="nav-link">
+                    Welkom @Context.Session.GetString("username")
+                </div>
                 <a asp-controller="Account" asp-action="Logout" class="form-inline my-2 my-lg-0 btn btn-outline-primary">
                     Logout
                 </a>

@@ -83,7 +83,14 @@ namespace Wba.Oefening.RateAMovie.Web.Controllers
             HttpContext.Session.SetString("username", accountLoginViewModel.Username);
             return RedirectToAction("Index", "Movies");
         }
-
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            //clear the session
+            HttpContext.Session.SetInt32("loggedIn", 0);
+            HttpContext.Session.Remove("username");
+            return RedirectToAction(nameof(Login));
+        }
         [HttpGet]
         public IActionResult Registered()
         {
