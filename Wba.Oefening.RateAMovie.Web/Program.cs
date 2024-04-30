@@ -6,6 +6,7 @@ using Wba.Oefening.RateAMovie.Web.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSession();
 // Register our own DbContext. It can now be injected and used by EF tooling.
 builder.Services.AddDbContext<MovieContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("MovieDb")
@@ -27,7 +28,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

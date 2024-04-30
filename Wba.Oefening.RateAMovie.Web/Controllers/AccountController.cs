@@ -48,7 +48,14 @@ namespace Wba.Oefening.RateAMovie.Web.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
+            //get the username from the cookie
+            //create viewmodel => put username in model
+
+            var accountLoginViewModel = new AccountLoginViewModel
+            {
+                Username = Request.Cookies["username"]
+            };
+            return View(accountLoginViewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -64,6 +71,16 @@ namespace Wba.Oefening.RateAMovie.Web.Controllers
                 ModelState.AddModelError("", "Please provide correct credentials!");
                 return View(accountLoginViewModel);
             }
+            //Logged in
+            //create the cookie
+            Response.Cookies.Append("username",accountLoginViewModel.Username,
+                new CookieOptions 
+                {
+                    Expires = DateTime.Now.AddDays(2)
+                });
+            //set a session var LoggedIn = 1
+            HttpContext.Session.SetInt32("loggedIn", 1);
+            HttpContext.Session.SetString("username", accountLoginViewModel.Username);
             return RedirectToAction("Index", "Movies");
         }
 
