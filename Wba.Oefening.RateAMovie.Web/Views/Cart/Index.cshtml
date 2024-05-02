@@ -1,3 +1,13 @@
 ﻿@model CartIndexViewModel
 
 @* show the contents of the cart *@
+@if(Model.Items.Count() == 0)
+{ 
+    <div class="alert alert-primary" role="alert">
+        No items in cart!
+    </div>
+}
+else
+{
+    
+}

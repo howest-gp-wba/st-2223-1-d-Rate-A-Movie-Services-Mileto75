@@ -4,6 +4,7 @@ namespace Wba.Oefening.RateAMovie.Web.ViewModels
 {
     public class CartIndexViewModel
     {
-        public IEnumerable<MovieItem> Items { get; set; }
+        public List<MovieItem> Items { get; set; }
+        public decimal Total { get; set; }
     }
 }
