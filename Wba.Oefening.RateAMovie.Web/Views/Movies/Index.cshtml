@@ -22,6 +22,9 @@
                 <a asp-controller="Movies"
                    asp-action="ConfirmDelete"
                    asp-route-id="@movie.Id" class="btn btn-danger">Delete</a>
+                <a asp-controller="Cart"
+                   asp-action="Add"
+                   asp-route-id="@movie.Id" class="btn btn-danger">Add to cart</a>
             </td>
         </tr>
     }

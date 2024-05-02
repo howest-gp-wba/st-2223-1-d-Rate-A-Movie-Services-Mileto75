@@ -9,6 +9,6 @@ namespace Wba.Oefening.RateAMovie.Web.Models
         public long Id { get; set; }
         public string Title { get; set; }
         public int Quantity { get; set; }
-        public Decimal Price { get; set; }
+        public decimal Price { get; set; }
     }
 }
