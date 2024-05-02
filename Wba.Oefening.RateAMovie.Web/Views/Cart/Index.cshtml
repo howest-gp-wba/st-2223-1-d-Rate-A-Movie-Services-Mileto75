@@ -22,6 +22,7 @@ else
                     <th>
                         Price
                     </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +32,9 @@ else
                         <td>@item.Title</td>
                         <td>@item.Quantity</td>
                         <td>@item.Price</td>
+                        <td><a class="btn btn-outline-primary" asp-controller="Cart" asp-action="Add" asp-route-id="@item.Id">+</a>
+                            <a class="btn btn-outline-danger" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Id">-</a>
+                        </td>
                     </tr>
                 }
                 <tr>

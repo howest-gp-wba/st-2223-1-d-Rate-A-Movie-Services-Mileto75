@@ -87,23 +87,48 @@ namespace Wba.Oefening.RateAMovie.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
-        public IActionResult Remove(long id)
+        public async Task<IActionResult> Remove(long id)
         {
             //create viewmodel
-            
+            var cartIndexViewModel = new CartIndexViewModel();
+            cartIndexViewModel.Items = new List<MovieItem>();
             //get the movie
-            
+            var movie = await _movieContext
+                .Movies.FirstOrDefaultAsync(m => m.Id == id);
             //check if null
-            
+            if (movie == null)
+            {
+                return NotFound();
+            };
             //get cart from session
-            
+            if (HttpContext.Session.Keys.Any(k => k.Equals("cartItems")))
+            {
+                //get the serialized viewmodel
+                var serializedCartIndexViewModel = HttpContext.Session.GetString("cartItems");
+                //deserialize it
+                cartIndexViewModel = JsonConvert
+                    .DeserializeObject<CartIndexViewModel>(serializedCartIndexViewModel);
+                
+                //check if movie in cart => decrement quantity
+                var item =  cartIndexViewModel.Items.FirstOrDefault(i => i.Id == id);
+                if(item.Quantity > 1)
+                {
+                    item.Quantity--;
+                    item.Price = 25 * item.Quantity;
+                }
+                else
+                {
+                    cartIndexViewModel.Items.Remove(item);
+                }
+                //add to session
+                HttpContext.Session
+                    .SetString("cartItems", JsonConvert.SerializeObject(cartIndexViewModel));
+
+                return RedirectToAction(nameof(Index));
+            }
             //if no cart in session return notfound();
+            return NotFound();
             
-            //check if movie in cart => decrement quantity
-            
-            //add cart to session
-            
-            return RedirectToAction(nameof(Index));
         }
     }
 }
