@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Wba.Oefening.RateAMovie.Web.Data;
 using Wba.Oefening.RateAMovie.Web.Models;
@@ -30,14 +31,19 @@ namespace Wba.Oefening.RateAMovie.Web.Controllers
             return View(cartIndexViewModel);
         }
         [HttpGet]
-        public IActionResult Add(long id) 
+        public async Task<IActionResult> Add(long id) 
         {
             //create viewmodel
-            
+            var cartIndexViewModel = new CartIndexViewModel();
+            cartIndexViewModel.Items = new List<MovieItem>();
             //get the movie
-            
+            var movie = await _movieContext
+                .Movies.FirstOrDefaultAsync(m => m.Id == id);
             //check if null
-            
+            if(movie == null)
+            {
+                
+            };
             //get cart from session
             
             //check if movie in cart => increment quantity
