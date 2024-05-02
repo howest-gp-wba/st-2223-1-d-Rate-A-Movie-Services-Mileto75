@@ -9,5 +9,35 @@
 }
 else
 {
-    
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Item
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Price</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Total</td>
+                    <td>@Model.Total</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 }

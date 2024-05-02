@@ -24,8 +24,16 @@ namespace Wba.Oefening.RateAMovie.Web.Controllers
             cartIndexViewModel.Items = new List<MovieItem>();
 
             //get cart viewmodel from session if exists
-
-            //calculate total
+            if (HttpContext.Session.Keys.Any(k => k.Equals("cartItems")))
+            {
+                //get the serialized viewmodel
+                var serializedCartIndexViewModel = HttpContext.Session.GetString("cartItems");
+                //deserialize it
+                cartIndexViewModel = JsonConvert
+                    .DeserializeObject<CartIndexViewModel>(serializedCartIndexViewModel);
+                //calculate total
+                cartIndexViewModel.Total = cartIndexViewModel.Items.Sum(i => i.Price);
+            }
 
             //pass to the view
             return View(cartIndexViewModel);
@@ -42,15 +50,40 @@ namespace Wba.Oefening.RateAMovie.Web.Controllers
             //check if null
             if(movie == null)
             {
-                
+                return NotFound();
             };
             //get cart from session
-            
+            if(HttpContext.Session.Keys.Any(k => k.Equals("cartItems")))
+            {
+                //get the serialized viewmodel
+                var serializedCartIndexViewModel = HttpContext.Session.GetString("cartItems");
+                //deserialize it
+                cartIndexViewModel = JsonConvert
+                    .DeserializeObject<CartIndexViewModel>(serializedCartIndexViewModel);
+            }
             //check if movie in cart => increment quantity
-            
-            //add movie to cart viewmodel
-            
+            var item = cartIndexViewModel.Items.FirstOrDefault(m => m.Id == id);
+            if (item != null)
+            {
+                //increment quantity
+                item.Quantity++;
+                item.Price = item.Quantity * 25;
+            }
+            else
+            {
+                //add movie to cart viewmodel
+                cartIndexViewModel.Items.Add(
+                    new MovieItem
+                    {
+                        Id = id,
+                        Title = movie.Title,
+                        Price = 25,
+                        Quantity = 1
+                    });
+            }
             //add to session
+            HttpContext.Session
+                .SetString("cartItems", JsonConvert.SerializeObject(cartIndexViewModel));
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
